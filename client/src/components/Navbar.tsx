@@ -11,7 +11,7 @@ const Navbar = () => {
 
   return (
     <div className="flex flex-col">
-      <header className='h-16 flex items-center'>
+      <header className='h-16 flex items-center bg-[#e6e1d5]'>
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-70">
             <div className="flex items-center gap-8 h-full">

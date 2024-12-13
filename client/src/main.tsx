@@ -8,6 +8,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Login from './components/Login.tsx';
 import Register from './components/Register.tsx';
+import CreateBook from './pages/CreateBook.tsx';
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "/signup",
         element: <Register/>
+      },
+      {
+        path: "/create",
+        element: <CreateBook/>
       },
     ]
   }
