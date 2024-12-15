@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Genre from "../models/Genre";
+import { BookGenre } from "../models";
 
 export const createGenre = async (req: Request, res: Response) => {
   try {
@@ -20,37 +21,40 @@ export const getGenres = async (req: Request, res: Response) => {
   }
 };
 
-export const updateGenre = async (req: Request, res: Response) => {
+export const getGenreOfBook = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { name } = req.body;
 
   try {
-    const genre = await Genre.findByPk(id);
-    if (!genre) {
+    const bookId = id;
+    const genres = await BookGenre.findAll({
+      where: { bookId },
+      attributes: ["genreId"],
+    });
+    if (!genres) {
       res.status(404).json({ message: "Genre not found" });
       return;
     }
 
-    await genre.update({ name });
-    res.status(200).json({ message: "Genre updated successfully", genre });
+    res.status(200).json({ message: "Genre retrive successfully", genres });
   } catch (error) {
-    res.status(500).json({ message: "Error updating genre", error });
+    res.status(500).json({ message: "Error retriving genre", error });
   }
 };
 
-export const deleteGenre = async (req: Request, res: Response) => {
-  const { id } = req.params;
+// export const deleteGenre = async (req: Request, res: Response) => {
+//   const { id } = req.params;
 
-  try {
-    const genre = await Genre.findByPk(id);
-    if (!genre) {
-      res.status(404).json({ message: "Genre not found" });
-      return;
-    }
+//   try {
+//     const genre = await Genre.findByPk(id);
+//     if (!genre) {
+//       res.status(404).json({ message: "Genre not found" });
+//       return;
+//     }
 
-    await genre.destroy();
-    res.status(200).json({ message: "Genre deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ message: "Error deleting genre", error });
-  }
-};
+//     await genre.destroy();
+//     res.status(200).json({ message: "Genre deleted successfully" });
+//   } catch (error) {
+//     res.status(500).json({ message: "Error deleting genre", error });
+//   }
+// };

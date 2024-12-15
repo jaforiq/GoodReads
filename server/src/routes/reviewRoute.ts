@@ -1,10 +1,10 @@
 import { Router } from "express";
 import { authenticateToken } from "../middleware/authMiddleware";
 import {
-  createReview,
+  createUpdateReview,
   deleteReview,
   getAllReviewOfBook,
-  updateReview,
+  getReviewOfBook,
 } from "../controllers/reviewController";
 
 const router = Router();
@@ -13,8 +13,9 @@ const router = Router();
 router.get("/:id", getAllReviewOfBook);
 
 // Protected routes for authenticated users
+router.get("/userreview/:id", authenticateToken, getReviewOfBook);
 router.delete("/:id", authenticateToken, deleteReview);
-router.post("/:id", authenticateToken, createReview);
-router.put("/:id", authenticateToken, updateReview);
+router.post("/:id", authenticateToken, createUpdateReview);
+//router.put("/:id", authenticateToken, updateReview);
 
 export default router;

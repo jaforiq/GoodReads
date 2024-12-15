@@ -12,7 +12,7 @@ export const showToast = (
     description: description,
     status: status,
     position: "top-right",
-    duration: 3000,
+    duration: 2000,
     isClosable: true,
   });
 };

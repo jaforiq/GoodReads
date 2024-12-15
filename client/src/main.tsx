@@ -9,6 +9,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Login from './components/Login.tsx';
 import Register from './components/Register.tsx';
 import CreateBook from './pages/CreateBook.tsx';
+import BookDetails from './pages/BookDetails.tsx';
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "/create",
         element: <CreateBook/>
+      },
+      {
+        path: "/details/:id",
+        element: <BookDetails/>
       },
     ]
   }

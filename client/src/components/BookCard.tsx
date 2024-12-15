@@ -2,18 +2,22 @@ import { useSelector } from 'react-redux';
 import emptyImage from '../../public/empty-folder.png';
 import {  ButtonGroup, Card, CardBody, CardFooter, Heading, Image, Stack, Text } from "@chakra-ui/react";
 import { RootState } from '@/store/store';
+import { useNavigate } from 'react-router-dom';
 
 
 
 const BookCard = () => {
-
+  const navigate = useNavigate();
   const bookState = useSelector((state: RootState) => state.book);
-  console.log('state: ', bookState);
+  //console.log('state: ', bookState);
+  const handleCardClick = (bookId: number| undefined) => navigate(`/details/${bookId}`);
+
+
   return (
     <div className="w-full mt-5">
       <div className="flex flex-wrap justify-center items-center mx-auto w-full gap-8">
       {bookState.length > 0 && bookState.map((res) => (
-      <Card className='cursor-pointer' maxW='sm' key={res.id} >
+      <Card className='cursor-pointer' maxW='sm' key={res.id}  onClick={() => handleCardClick(res.id)}>
         <CardBody>
           <Image
             className='m-auto h-[15rem]'

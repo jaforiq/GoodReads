@@ -118,9 +118,9 @@ export default function LoginPage() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try{
-      console.log('form: ', loginData);
+      //console.log('form: ', loginData);
        const response = await userLogin(loginData);
-       console.log('res: ', response);
+       //console.log('res: ', response);
        if(response) {
         localStorage.setItem("token", response.token);
         dispatch(login(response.token));
