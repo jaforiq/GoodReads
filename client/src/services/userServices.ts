@@ -24,3 +24,14 @@ export const createUser = async (formData: {
     console.log("Error occure from SignUp service.", err);
   }
 };
+
+export const getAllUser = async (token: string) => {
+  try {
+    const response = await apiClient.get("/users/", {
+      headers: { authorization: `Bearer ${token}` },
+    });
+    return response.data.users;
+  } catch (err: any) {
+    console.log("Error occure from SignUp service.", err);
+  }
+};

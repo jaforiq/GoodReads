@@ -59,7 +59,7 @@ export const getAllUsers: RequestHandler = async (
   res: Response
 ): Promise<void> => {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({ attributes: ["id", "username"] });
     res.status(200).json({ users });
     return;
   } catch (error) {

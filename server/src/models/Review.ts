@@ -3,7 +3,7 @@ import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 interface ReviewAttributes {
   id: number;
   rating: number;
-  review: string;
+  review: Text;
   userId: number;
   bookId: number;
 }
@@ -16,7 +16,7 @@ class Review
 {
   public id!: number;
   public rating!: number;
-  public review!: string;
+  public review!: Text;
   public userId!: number;
   public bookId!: number;
 
@@ -33,7 +33,7 @@ class Review
           allowNull: true,
         },
         review: {
-          type: DataTypes.STRING,
+          type: DataTypes.TEXT,
           allowNull: true,
         },
         userId: {

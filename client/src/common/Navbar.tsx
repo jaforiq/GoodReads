@@ -37,7 +37,7 @@ const Navbar = () => {
               {
                 token ? (<>
                   <Link to="/create"><button className="text-black px-4 py-2 rounded-md hover:bg-slate-500 hover:text-white">Create Book</button></Link>
-                  <Link to=""><button className=" text-black px-4 py-2 rounded-md hover:bg-slate-500 hover:text-white">Wishlist</button></Link>
+                  {/* <Link to=""><button className=" text-black px-4 py-2 rounded-md hover:bg-slate-500 hover:text-white">Wishlist</button></Link> */}
                   <Link to="/"><button className="text-black px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white" onClick=
                     {() => {
                       dispatch(logout());

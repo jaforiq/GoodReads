@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import emptyImage from '../../public/empty-folder.png';
+import emptyImage from '../assets/empty-folder.png';
 import {  ButtonGroup, Card, CardBody, CardFooter, Heading, Image, Stack, Text } from "@chakra-ui/react";
 import { RootState } from '@/store/store';
 import { useNavigate } from 'react-router-dom';

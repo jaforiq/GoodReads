@@ -1,7 +1,7 @@
 import { User } from "@/type/User";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const initialState: User = {
+const initialState = {
   token: "",
 };
 

@@ -10,34 +10,44 @@ export const createUpdateReview: RequestHandler = async (
   const { id } = req.params;
   const bookId = parseInt(id, 10); // string to int
 
-  console.log("back: ", rating, "rev: ", review);
+  //console.log("back: ", rating, "rev: ", review);
+
   try {
-    const newReview = await Review.findOne({ where: { bookId, userId } });
-
+    let newReview = await Review.findOne({ where: { bookId, userId } });
     if (!newReview) {
-      const createReview = await Review.create({
-        rating,
-        review,
-        userId,
-        bookId,
-      });
+      //console.log("In: ", userId, bookId);
+      // const createReview = await Review.create({
+      //   rating,
+      //   review,
+      //   userId,
+      //   bookId,
+      // });
+      //console.log("In2: ", userId, bookId, createReview);
 
-      if (!createReview)
-        res.status(500).json({ message: "Failed to create review" });
+      // if (!createReview)
+      //   res.status(500).json({ message: "Failed to create review" });
       //console.log("GenId: ", genreId);
-
-      res
-        .status(201)
-        .json({ message: "New Review created successfully", createReview });
+      //newReview = createReview;
+      res.status(201).json(
+        await Review.create({
+          rating,
+          review,
+          userId,
+          bookId,
+        })
+      );
       return;
     } else {
-      await newReview.update({
-        rating,
-        review,
-      });
-      res
-        .status(200)
-        .json({ message: "Review updated successfully", newReview });
+      // await newReview.update({
+      //   rating,
+      //   review,
+      // });
+      res.status(200).json(
+        await newReview.update({
+          rating,
+          review,
+        })
+      );
       return;
     }
   } catch (error) {
@@ -45,30 +55,6 @@ export const createUpdateReview: RequestHandler = async (
     return;
   }
 };
-
-// export const updateReview: RequestHandler = async (
-//   req: Request,
-//   res: Response
-// ): Promise<void> => {
-//   const { rating, review } = req.body;
-
-//   const { id } = req.params;
-//   const bookId = parseInt(id, 10);
-//   const userId = (req as any).user?.id;
-
-//   try {
-//     const userReview = await Review.findOne({ where: { bookId, userId } });
-
-//     if (!userReview) {
-//       res.status(404).json({ message: "Review not found or unauthorized" });
-//       return;
-//     }
-
-//   } catch (error) {
-//     res.status(500).json({ message: "Failed to update Review", error });
-//     return;
-//   }
-// };
 
 export const deleteReview: RequestHandler = async (
   req: Request,
@@ -95,6 +81,7 @@ export const deleteReview: RequestHandler = async (
   }
 };
 
+// Get All review of book
 export const getAllReviewOfBook: RequestHandler = async (
   req: Request,
   res: Response
@@ -103,8 +90,15 @@ export const getAllReviewOfBook: RequestHandler = async (
     const { id } = req.params;
     const bookId = parseInt(id, 10);
 
-    const userReview = await Review.findAll({ where: { bookId } });
-    res.status(200).json({ userReview });
+    // const userAllReview = await Review.findAndCountAll({
+    //   where: { bookId },
+    // });
+    // attributes: ["rating", "review"],
+    res.status(200).json(
+      await Review.findAndCountAll({
+        where: { bookId },
+      })
+    );
     return;
   } catch (error) {
     res.status(500).json({ message: "Error retrieving books", error });
@@ -112,6 +106,7 @@ export const getAllReviewOfBook: RequestHandler = async (
   }
 };
 
+// User's previous rating
 export const getReviewOfBook: RequestHandler = async (
   req: Request,
   res: Response

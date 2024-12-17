@@ -5,5 +5,6 @@ export interface Book {
   thumbnailUrl: string;
   AuthorName: string;
   PublisherName: string;
+  createdAt: string;
   genreId: number[];
 }

@@ -9,6 +9,17 @@ export const getUserReview = async (id: any, token: string) => {
     //console.log("resp: ", response.data.userReview.rating);
     return response.data.userReview.rating;
   } catch (error: any) {
+    throw new Error(error.response);
+  }
+};
+
+export const getAllReview = async (id: any) => {
+  try {
+    //console.log("rating: ", id, "tok: ", token);
+    const response = await apiClient.get(`/reviews/${id}`);
+    //console.log("resp: ", response.data);
+    return response.data.rows;
+  } catch (error: any) {
     throw new Error(error.response.data);
   }
 };
@@ -28,7 +39,7 @@ export const createUserRating = async (
       }
     );
     //console.log("res: ", response);
-    return response.data.newReview;
+    return response.data;
   } catch (error: any) {
     throw new Error(error.response.data);
   }
@@ -48,7 +59,7 @@ export const createUserReview = async (
       }
     );
     //console.log("resp: ", response);
-    return response.data.newReview;
+    return response.data;
   } catch (error: any) {
     throw new Error(error.response.data);
   }

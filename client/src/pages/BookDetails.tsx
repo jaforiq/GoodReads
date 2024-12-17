@@ -1,26 +1,30 @@
+import { format } from "date-fns";
 import { Star } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import emptyImage from '../../public/empty-folder.png';
-import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { findBook } from '@/services/bookServices';
 import { Book } from '@/type/Book';
-import { getGenresOfBook } from '@/services/genreServices';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { createUserRating, createUserReview, getUserReview } from '@/services/reviewServices';
+import { CommentDB } from "@/type/Comment";
+import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Button } from "@/components/ui/button"
+import { findBook } from '@/services/bookServices';
+import BookComment from '@/components/BookComment';
+import { getGenresOfBook } from '@/services/genreServices';
+import { createUserRating, getAllReview, getUserReview } from '@/services/reviewServices';
 
 const BookDetails = () => {
   const { id } = useParams<{ id: string }>();
-  const [book, setBook] = useState<Book | null>(null);
+  const token = localStorage.getItem('token');
   const [genre, setgenre] = useState<string[]>([]);
-  const [selectedRating, setSelectedRating] = useState<number | null>(null);
-  const token = useSelector((state: RootState) => state.user.token);
+  const [book, setBook] = useState<Book | null>(null);
+  const [review, setReview] = useState<CommentDB[]>([]);
   const genreState = useSelector((state: RootState) => state.genre);
+  const [selectedRating, setSelectedRating] = useState<number | null>(null);
+  const [averageRating, setAverageRating] = useState<number | null>(null);
 
   const fetchBook = async () => {
     const response = await findBook(id);
-    //console.log(response);
+    //console.log('Book: ',response);
     setBook(response);
   }
 
@@ -29,20 +33,45 @@ const BookDetails = () => {
     const filteredGenre = genreState
     .filter((genre) => response.includes(genre.id))
     .map((genre) => genre.name);
-    //console.log('res: ', genreState);
+
     setgenre(filteredGenre);
   }
 
+  //fetch user rating
   const fetchRatingOfBook = async () => {
-    const response = await getUserReview(id, token);
-    setSelectedRating(response);
+    if(token){
+      const response = await getUserReview(id, token);
+      setSelectedRating(response);
+    }
   }
 
+  const fetchAllReview = async () => {
+    const response = await getAllReview(id);
+    //console.log('Review: ',response);
+    setReview(response); 
+  }
+
+  const calAvg = () => {
+    if (review.length > 0) {
+      //console.log('Inside');
+      const totalRating = review.reduce((sum, item) => sum + item.rating, 0);
+      const avg = totalRating / review.length;
+  
+      setAverageRating(avg);
+      //console.log(`Average Rating: ${avg}`);
+      //console.log(`Is Decimal: ${avg % 1 !== 0}`);
+    } else {
+      setAverageRating(null);
+    }
+
+  }
 
   useEffect(()=> {
     fetchBook();
     fetchGenreOfBook();
     fetchRatingOfBook();
+    fetchAllReview();
+    calAvg();
   }, [])
 
 
@@ -57,7 +86,9 @@ const BookDetails = () => {
         <div className="w-full">
           <h3 className="text-center mb-2 text-gray-700">Rate this book</h3>
           <div className="flex justify-center gap-1">
-            {[1, 2, 3, 4, 5].map((star) => (
+            {
+            //for(let i = 1; i < averageRating; i++)
+            [1, 2, 3, 4, 5].map((star) => (
               <Star
                 key={star}
                 className={`w-8 h-8 ${
@@ -68,7 +99,8 @@ const BookDetails = () => {
                 onClick={async () => {
                   setSelectedRating(star);
                   //handleUserRating(star);
-                  await createUserRating(star, id, token);
+                  if(token)
+                    await createUserRating(star, id, token);
                 }}
                 onMouseEnter={(e) => {
                   const stars = e.currentTarget.parentElement?.children;
@@ -104,22 +136,16 @@ const BookDetails = () => {
         
         <div className="flex items-center gap-2 mb-6">
           <div className="flex">
-            {[1, 2, 3, 4].map((star) => (
+            { 
+            [1, 2, 3, 4, 5].map((star) => (
               <Star key={star} className="w-6 h-6 fill-orange-400 stroke-orange-400" />
             ))}
-            {/* <Star className="w-6 h-6 fill-orange-400 stroke-orange-400 fill-opacity-50" /> */}
           </div>
-          <span className="text-2xl font-bold">4.45</span>
-          <span className="text-gray-600">· 1,398 ratings · 217 reviews</span>
+          <span className="text-2xl font-bold">{averageRating}</span>
+          <span className="text-gray-600"> {review.length} ratings and reviews</span>
         </div>
 
         <p className="text-gray-800 mb-8 leading-relaxed">
-          {/* A shocking and revelatory account of the murder of Emmett Till that lays bare how forces
-          from around the world converged on the Mississippi Delta in the long lead-up to the crime,
-          and how the truth was erased for so long. Wright Thompson's family farm in Mississippi is 23
-          miles from the site of one of the most notorious and consequential killings in American history,
-          yet he had to leave the state for college before he learned the first thing about it. To this day,
-          many Americans know little more than what they learned from early newspaper coverage of the crime... */}
           {book?.details}
         </p>
 
@@ -139,8 +165,10 @@ const BookDetails = () => {
         </div>
 
         <div className="text-gray-600">
-          <p>448 pages, Hardcover</p>
-          <p>First published September 24, 2024</p>
+          <p>First published {format(book?.createdAt ? book.createdAt : new Date(), "MMMM dd, yyyy")}</p>
+        </div>
+        <div className="ml-[300px] p-8 flex-1">
+          <BookComment id={id}/>
         </div>
       </div>
     </div>
