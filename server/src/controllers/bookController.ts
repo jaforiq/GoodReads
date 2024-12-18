@@ -1,5 +1,8 @@
-import { Book, BookGenre } from "../models";
+import { Op } from "sequelize";
+import sequelize, { Book, BookGenre } from "../models";
 import { Request, RequestHandler, Response } from "express";
+import { fetchGenresByName } from "./genreController";
+import { QueryTypes } from "sequelize";
 
 export const createBook: RequestHandler = async (
   req: Request,
@@ -104,7 +107,7 @@ export const getAllBooks: RequestHandler = async (
     res.status(200).json({ books });
     return;
   } catch (error) {
-    res.status(500).json({ message: "Error retrieving books", error });
+    res.status(500).json({ message: "Error retrieving all books", error });
     return;
   }
 };
@@ -114,7 +117,7 @@ export const getBookById: RequestHandler = async (
   res: Response
 ): Promise<void> => {
   const { id } = req.params;
-
+  //console.log("getById");
   try {
     const book = await Book.findOne({ where: { id } });
 
@@ -128,5 +131,69 @@ export const getBookById: RequestHandler = async (
   } catch (error) {
     res.status(500).json({ message: "Error retrieving book", error });
     return;
+  }
+};
+
+export const searchBookByTitle: RequestHandler = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const title = req.query.title as string | undefined;
+
+  try {
+    const books = await Book.findAll({
+      where: title
+        ? { title: { [Op.iLike]: `%${title}%` } } // Search by title
+        : {}, // Fetch all books if no title is provided
+    });
+
+    if (books.length === 0) {
+      res.status(404).json({ message: "No books found." });
+      return;
+    }
+
+    res.status(200).json(books);
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving books.", error });
+  }
+};
+
+export const searchBookByGenre: RequestHandler = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const name = req.query.name as string | undefined;
+
+  try {
+    const genre = await fetchGenresByName(name);
+
+    if (!genre.length) {
+      res.status(404).json({ message: "No genre found." });
+      return;
+    }
+    const genreIds = genre.map((gen) => gen.id);
+
+    const books = await sequelize.query(
+      `
+      SELECT books.*
+      FROM books
+      INNER JOIN book_genres ON books.id = book_genres."bookId"
+      INNER JOIN genres ON genres.id = book_genres."genreId"
+      WHERE genres.id IN (:genreIds);
+      `,
+      {
+        replacements: { genreIds }, // Pass genre IDs as parameters
+        type: QueryTypes.SELECT, // Define query type
+      }
+    );
+
+    if (!books.length) {
+      res.status(404).json({ message: "No books found for the given genre." });
+      return;
+    }
+
+    res.status(200).json(books);
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving books.", error });
   }
 };

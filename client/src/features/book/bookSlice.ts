@@ -14,12 +14,6 @@ const bookSlice = createSlice({
       const newBooks = Array.isArray(action.payload)
         ? action.payload
         : [action.payload];
-
-      // newBooks.forEach((book) => {
-      //   if (!state.some((existingBook) => existingBook.id === book.id)) {
-      //     state.push(book);
-      //   }
-      // });
       state.push(...newBooks);
     },
     editBook: (state, action: PayloadAction<Book>) => {
@@ -31,9 +25,13 @@ const bookSlice = createSlice({
     removeBook: (state, action: PayloadAction<number>) => {
       return state.filter((book) => book.id !== action.payload);
     },
+    clearBooks: () => {
+      return [];
+    },
   },
 });
 
-export const { setbooks, addBooks, editBook, removeBook } = bookSlice.actions;
+export const { setbooks, addBooks, editBook, removeBook, clearBooks } =
+  bookSlice.actions;
 
 export default bookSlice.reducer;

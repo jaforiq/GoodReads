@@ -6,12 +6,16 @@ import {
   getAllBooks,
   getBookById,
   updateBook,
+  searchBookByGenre,
+  searchBookByTitle,
 } from "../controllers/bookController";
 
 const router = Router();
 
 // Public route
 router.get("/", getAllBooks);
+router.get("/searchtitle", searchBookByTitle);
+router.get("/searchgenre", searchBookByGenre);
 router.get("/:id", getBookById);
 
 // Protected routes for authenticated users

@@ -33,7 +33,7 @@ const BookDetails = () => {
     const filteredGenre = genreState
     .filter((genre) => response.includes(genre.id))
     .map((genre) => genre.name);
-
+    //console.log('Gen3',filteredGenre)
     setgenre(filteredGenre);
   }
 
@@ -47,19 +47,16 @@ const BookDetails = () => {
 
   const fetchAllReview = async () => {
     const response = await getAllReview(id);
-    //console.log('Review: ',response);
+    console.log('Review: ',response);
     setReview(response); 
   }
 
   const calAvg = () => {
     if (review.length > 0) {
-      //console.log('Inside');
       const totalRating = review.reduce((sum, item) => sum + item.rating, 0);
       const avg = totalRating / review.length;
   
       setAverageRating(avg);
-      //console.log(`Average Rating: ${avg}`);
-      //console.log(`Is Decimal: ${avg % 1 !== 0}`);
     } else {
       setAverageRating(null);
     }
@@ -70,10 +67,12 @@ const BookDetails = () => {
     fetchBook();
     fetchGenreOfBook();
     fetchRatingOfBook();
-    fetchAllReview();
-    calAvg();
+    fetchAllReview();    
   }, [])
 
+  useEffect(() => {
+    calAvg();
+  }, [review])
 
   return (
     <div className="flex min-h-screen bg-white">

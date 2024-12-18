@@ -1,12 +1,14 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
 import logo from "../images/ui-2.svg";
+import { Link } from "react-router-dom";
+import { RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "@/features/user/userSlice";
-import { RootState } from "@/store/store";
-import { useEffect } from "react";
 
 const Navbar = () => {
   const dispatch = useDispatch();
+
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if(token){
@@ -15,7 +17,7 @@ const Navbar = () => {
   },[]);
   
   const token = useSelector((state: RootState) => state.user.token);
-  console.log('navbar: ', token);
+  //console.log('navbar: ', token);
   return (
     <div className="flex flex-col">
       <header className='h-16 flex items-center bg-[#e6e1d5]'>
@@ -30,6 +32,7 @@ const Navbar = () => {
                   className="h-8"
                 />
               </a>
+              {/* Search Bar */}
             </div>
 
             {/* Navigation */}
