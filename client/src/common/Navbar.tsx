@@ -19,8 +19,8 @@ const Navbar = () => {
   const token = useSelector((state: RootState) => state.user.token);
   //console.log('navbar: ', token);
   return (
-    <div className="flex flex-col">
-      <header className='h-16 flex items-center bg-[#e6e1d5]'>
+    <div className="flex flex-col relative">
+      <header className='h-16 mb-10 flex items-center bg-[#e6e1d5] fixed top-0 left-0 right-0 z-10'>
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-70">
             <div className="flex items-center gap-8 h-full">
@@ -40,7 +40,7 @@ const Navbar = () => {
               {
                 token ? (<>
                   <Link to="/create"><button className="text-black px-4 py-2 rounded-md hover:bg-slate-500 hover:text-white">Create Book</button></Link>
-                  {/* <Link to=""><button className=" text-black px-4 py-2 rounded-md hover:bg-slate-500 hover:text-white">Wishlist</button></Link> */}
+                  <Link to="/mybook"><button className=" text-black px-4 py-2 rounded-md hover:bg-slate-500 hover:text-white">My Book</button></Link>
                   <Link to="/"><button className="text-black px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white" onClick=
                     {() => {
                       dispatch(logout());

@@ -1,20 +1,19 @@
-import { useState } from 'react';
-import Select from "react-select";
-import { Book } from '@/type/Book';
-import { RootState } from '@/store/store';
-import { GenreOption } from '@/type/Genre';
-import { FormControl } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
-import { showToast } from '@/services/showToast';
-import { addBooks } from '@/features/book/bookSlice';
-import { createBook } from '@/services/bookServices';
-import { useDispatch, useSelector } from 'react-redux';
+import { Book } from "@/type/Book";
+import { RootState } from "@/store/store";
+import { Select } from "@chakra-ui/react";
+import { GenreOption } from "@/type/Genre";
+import { useEffect, useState } from "react";
+import { showToast } from "@/services/showToast";
+import { addBooks } from "@/features/book/bookSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { FormControl } from "@chakra-ui/react/form-control";
+import { findBookById, updateBook } from "@/services/bookServices"
 
-
-const CreateBook = () => {
+const EditBook = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const token = useSelector((state: RootState) => state.user.token);
+  const { id } = useParams<{ id: string }>();
   const genreState = useSelector((state: RootState) => state.genre);
 
   
@@ -28,11 +27,24 @@ const CreateBook = () => {
     genreId: []
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setBook(prev => ({ ...prev, [name]: value }));
-  };
+  const fetchBookById = async () => {
+    try{
+      const response = await findBookById(id);
+      setBook(response);
+    } catch(err: any){
+      console.log('Error Book Edit getById.', err);
+    }
+  }
 
+  useEffect(() => {
+    fetchBookById();
+  }, [])
+  
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
+      setBook(prev => ({ ...prev, [name]: value }));
+    };
+  
   const genreOptions : GenreOption[] = genreState.map((genre) => ({
     value: genre.id,
     label: genre.name 
@@ -40,8 +52,6 @@ const CreateBook = () => {
 
   const handleGenreChange = (selectedOptions: readonly GenreOption[]) => {
     const selectedIds = selectedOptions.map((option) => option.value);
-    //console.log('cre: ',selectedIds);
-    //setBook(book => ({...book, genreId: selectedIds }))
     setBook({ ...book, genreId: selectedIds });
   };
 
@@ -70,25 +80,30 @@ const CreateBook = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const token = localStorage.getItem('token');
     try{
-      const newBook = await createBook(book, token);
-      if(newBook){
-        // const currentBooks = bookState; 
-        // const newBooks = newBook.filter((book: Book) => !currentBooks.some((existingBook) => existingBook.id === book.id));
-        if (newBook.length > 0) {
-          dispatch(addBooks(newBook));
-        }
-        navigate('/')        
-        showToast("Book Create", "Book Created Successfull", 'success');
-      }   
+      if(token){
+        const newBook = await updateBook(id, book, token);
+        console.log('newBook: ', newBook);
+        if(newBook){
+          // const currentBooks = bookState; 
+          // const newBooks = newBook.filter((book: Book) => !currentBooks.some((existingBook) => existingBook.id === book.id));
+          if (newBook.length > 0) {
+            dispatch(addBooks(newBook));
+          }
+          navigate('/mybook');        
+          showToast("Book Update", "Book Updated Successfull", 'success');
+        }   
+      }
     } catch(err: any){
-      console.log('Error Book creation.', err);
+      showToast("Book Update", "Book Updated failed", 'error');
+      console.log('Error Book Update.', err);
     }
   };
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="flex items-center text-2xl font-bold mb-4">Create New Book</h2>
+      <h2 className="flex items-center text-2xl font-bold mb-4">Edit Book</h2>
       <div className="flex flex-col md:flex-row gap-8">
         <form onSubmit={handleSubmit} className="space-y-4 flex-1">
           <div>
@@ -115,7 +130,7 @@ const CreateBook = () => {
               value={book.details}
               placeholder="Enter details..."
               onChange={handleInputChange}
-              className="mt-1 py-3 px-3 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             ></textarea>
           </div>
 
@@ -148,7 +163,7 @@ const CreateBook = () => {
           </div>
 
 
-          <FormControl>
+          {/* <FormControl>
           <label htmlFor="picture" className="block text-sm font-medium text-gray-700">Genre</label>
             <Select
               isMulti
@@ -159,7 +174,7 @@ const CreateBook = () => {
               aria-label="Select Genres"
               closeMenuOnSelect={false}
             />
-          </FormControl>
+          </FormControl> */}
 
           <div>
             <label htmlFor="picture" className="block text-sm font-medium text-gray-700">Book Picture</label>
@@ -205,6 +220,7 @@ const CreateBook = () => {
       </div>
     </div>
   );
+  
 }
 
-export default CreateBook
+export default EditBook

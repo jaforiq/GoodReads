@@ -8,6 +8,8 @@ import {
   updateBook,
   searchBookByGenre,
   searchBookByTitle,
+  userBooks,
+  getBookDetails,
 } from "../controllers/bookController";
 
 const router = Router();
@@ -16,11 +18,15 @@ const router = Router();
 router.get("/", getAllBooks);
 router.get("/searchtitle", searchBookByTitle);
 router.get("/searchgenre", searchBookByGenre);
-router.get("/:id", getBookById);
+router.get("/details/:id", getBookDetails);
 
 // Protected routes for authenticated users
+router.get("/createduser", authenticateToken, userBooks);
 router.post("/", authenticateToken, createBook);
 router.put("/:id", authenticateToken, updateBook);
 router.delete("/:id", authenticateToken, deleteBook);
+
+//Annoying route
+router.get("/:id", getBookById);
 
 export default router;

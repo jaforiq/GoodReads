@@ -1,4 +1,5 @@
-import { Review } from "../models";
+import { QueryTypes } from "sequelize";
+import sequelize, { Review } from "../models";
 import { Request, RequestHandler, Response } from "express";
 
 export const createUpdateReview: RequestHandler = async (
@@ -15,33 +16,30 @@ export const createUpdateReview: RequestHandler = async (
   try {
     let newReview = await Review.findOne({ where: { bookId, userId } });
     if (!newReview) {
-      //console.log("In: ", userId, bookId);
-      // const createReview = await Review.create({
-      //   rating,
-      //   review,
-      //   userId,
-      //   bookId,
-      // });
-      //console.log("In2: ", userId, bookId, createReview);
-
-      // if (!createReview)
-      //   res.status(500).json({ message: "Failed to create review" });
-      //console.log("GenId: ", genreId);
-      //newReview = createReview;
-      res.status(201).json(
-        await Review.create({
-          rating,
-          review,
-          userId,
-          bookId,
-        })
+      const bookReview = await Review.create({
+        rating,
+        review,
+        userId,
+        bookId,
+      });
+      const user = await sequelize.query(
+        `select username from users where id = :userId`,
+        {
+          replacements: { userId }, // Pass genre IDs as parameters
+          type: QueryTypes.SELECT, // Define query type
+        }
       );
-      return;
+      if (user && "username" in user) {
+        const bookReviewWithUsername = {
+          ...bookReview.toJSON(), // Convert Sequelize instance to plain object
+          username: (user as { username: string }).username, // Explicit type assertion for safety
+        };
+
+        res.status(201).json(bookReviewWithUsername);
+      } else {
+        res.status(404).json({ message: "User not found" });
+      }
     } else {
-      // await newReview.update({
-      //   rating,
-      //   review,
-      // });
       res.status(200).json(
         await newReview.update({
           rating,
@@ -90,15 +88,27 @@ export const getAllReviewOfBook: RequestHandler = async (
     const { id } = req.params;
     const bookId = parseInt(id, 10);
 
-    // const userAllReview = await Review.findAndCountAll({
+    // const allReviews = await Review.findAll({
     //   where: { bookId },
+    //   raw: true,
     // });
-    // attributes: ["rating", "review"],
-    res.status(200).json(
-      await Review.findAndCountAll({
-        where: { bookId },
-      })
+    const bookReview = await sequelize.query(
+      `
+      select users.username, reviews.* 
+      from users 
+      inner join reviews on (users.id = reviews."userId")
+      inner join books on (books.id = reviews."bookId")
+      where books.id = :bookId AND reviews.review IS NOT NULL AND reviews.review != ''
+      `,
+      {
+        replacements: { bookId }, // Pass genre IDs as parameters
+        type: QueryTypes.SELECT, // Define query type
+      }
     );
+    //console.log("Reviewers: ", bookReview);
+
+    //console.log("Details: ", reviewDetails);
+    res.status(200).json(bookReview);
     return;
   } catch (error) {
     res.status(500).json({ message: "Error retrieving books", error });

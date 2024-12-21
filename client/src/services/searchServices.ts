@@ -12,14 +12,13 @@ export const searchBookByTitle = async (debouncedInputValue: string) => {
   }
 };
 
-export const searchBookByGenre = async (debouncedInputValue: string) => {
+export const searchBookByGenre = async (genreIds: number[]) => {
   try {
     const response = await apiClient.get(
-      `/books/searchgenre?name=${encodeURIComponent(debouncedInputValue)}`
+      `/books/searchgenre?genreIds=${encodeURIComponent(genreIds.join(","))}`
     );
-    //console.log("Search: ", response);
     return response.data;
   } catch (err: any) {
-    console.log("Error occure from search service.", err);
+    console.error("Error from search service:", err);
   }
 };

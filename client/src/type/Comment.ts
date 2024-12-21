@@ -17,4 +17,5 @@ export interface CommentDB {
   bookId: number;
   createdAt: Date;
   updatedAt: Date;
+  username: string;
 }

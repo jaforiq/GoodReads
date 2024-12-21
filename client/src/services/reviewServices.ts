@@ -18,7 +18,7 @@ export const getAllReview = async (id: any) => {
     //console.log("rating: ", id, "tok: ", token);
     const response = await apiClient.get(`/reviews/${id}`);
     //console.log("resp: ", response.data);
-    return response.data.rows;
+    return response.data;
   } catch (error: any) {
     throw new Error(error.response.data);
   }
@@ -58,7 +58,7 @@ export const createUserReview = async (
         headers: { authorization: `Bearer ${token}` },
       }
     );
-    //console.log("resp: ", response);
+    console.log("respUser: ", response);
     return response.data;
   } catch (error: any) {
     throw new Error(error.response.data);
