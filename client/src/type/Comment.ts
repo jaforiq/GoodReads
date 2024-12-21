@@ -5,8 +5,9 @@ export interface Comment {
     avatar: string;
   };
   rating: number;
-  content: Text;
+  content: string;
   date: string;
+  userId: number;
 }
 
 export interface CommentDB {

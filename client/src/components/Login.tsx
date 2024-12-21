@@ -1,14 +1,14 @@
 
-import { useState, FormEvent, ChangeEvent } from 'react'
-import { Button } from "@/components/ui/button"
+import { useDispatch } from 'react-redux'
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
-import { userLogin } from '@/services/userServices'
+import { Button } from "@/components/ui/button"
 import { showToast } from '@/services/showToast'
-import { useDispatch } from 'react-redux'
 import { login } from '@/features/user/userSlice'
 import { Link, useNavigate } from 'react-router-dom'
+import { userLogin } from '@/services/userServices'
+import { useState, FormEvent, ChangeEvent } from 'react'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 
 export default function LoginPage() {
   const [loginData, setLoginData] = useState({
@@ -29,12 +29,11 @@ export default function LoginPage() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try{
-      //console.log('form: ', loginData);
        const response = await userLogin(loginData);
-       //console.log('res: ', response);
+       //console.log('Login:  ', response);
        if(response) {
         localStorage.setItem("token", response.token);
-        dispatch(login(response.token));
+        dispatch(login({ token: response.token, userId: response.userId }));
         navigate('/')        
         showToast("Log In", "User Login Successfull", 'success');
        } else {

@@ -58,7 +58,19 @@ export const createUserReview = async (
         headers: { authorization: `Bearer ${token}` },
       }
     );
-    console.log("respUser: ", response);
+    //console.log("respUser: ", response);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data);
+  }
+};
+
+export const deleteUserReview = async (id: any, token: string) => {
+  try {
+    const response = await apiClient.delete(`/reviews/${id}`, {
+      headers: { authorization: `Bearer ${token}` },
+    });
+    //console.log("respUser: ", response);
     return response.data;
   } catch (error: any) {
     throw new Error(error.response.data);

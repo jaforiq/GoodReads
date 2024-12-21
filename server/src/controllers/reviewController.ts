@@ -11,17 +11,19 @@ export const createUpdateReview: RequestHandler = async (
   const { id } = req.params;
   const bookId = parseInt(id, 10); // string to int
 
-  //console.log("back: ", rating, "rev: ", review);
+  console.log("back: ", rating, "rev: ", review);
 
   try {
     let newReview = await Review.findOne({ where: { bookId, userId } });
+
     if (!newReview) {
-      const bookReview = await Review.create({
+      let bookReview = await Review.create({
         rating,
         review,
         userId,
         bookId,
       });
+
       const user = await sequelize.query(
         `select username from users where id = :userId`,
         {
@@ -29,25 +31,50 @@ export const createUpdateReview: RequestHandler = async (
           type: QueryTypes.SELECT, // Define query type
         }
       );
-      if (user && "username" in user) {
+      //console.log("User: ", user);
+      if (user && user[0] && "username" in user[0]) {
+        //console.log("User2: ", user);
         const bookReviewWithUsername = {
           ...bookReview.toJSON(), // Convert Sequelize instance to plain object
-          username: (user as { username: string }).username, // Explicit type assertion for safety
+          username: (user[0] as { username: string }).username, // Explicit type assertion for safety
         };
 
         res.status(201).json(bookReviewWithUsername);
       } else {
-        res.status(404).json({ message: "User not found" });
+        res
+          .status(404)
+          .json({ message: "User not found to create or update review" });
       }
     } else {
-      res.status(200).json(
-        await newReview.update({
-          rating,
-          review,
-        })
+      let bookReview = await newReview.update({
+        rating,
+        review,
+      });
+
+      const user = await sequelize.query(
+        `select username from users where id = :userId`,
+        {
+          replacements: { userId }, // Pass genre IDs as parameters
+          type: QueryTypes.SELECT, // Define query type
+        }
       );
-      return;
+      //console.log("Review: ", bookReview);
+      //console.log("User: ", user);
+      if (user && user[0] && "username" in user[0]) {
+        console.log("User2: ", user);
+        const bookReviewWithUsername = {
+          ...bookReview.toJSON(), // Convert Sequelize instance to plain object
+          username: (user[0] as { username: string }).username, // Explicit type assertion for safety
+        };
+
+        res.status(201).json(bookReviewWithUsername);
+      } else {
+        res
+          .status(404)
+          .json({ message: "User not found to create or update review" });
+      }
     }
+    //console.log("bookReview: ", bookReview);
   } catch (error) {
     res.status(500).json({ message: "Failed to create review", error });
     return;
@@ -59,11 +86,11 @@ export const deleteReview: RequestHandler = async (
   res: Response
 ): Promise<void> => {
   const { id } = req.params;
-  const bookId = parseInt(id, 10);
+  //const bookId = parseInt(id, 10);
   const userId = (req as any).user?.id;
 
   try {
-    const userReview = await Review.findOne({ where: { bookId, userId } });
+    const userReview = await Review.findByPk(id);
 
     if (!userReview) {
       res.status(404).json({ message: "Review not found or unauthorized" });
@@ -98,7 +125,7 @@ export const getAllReviewOfBook: RequestHandler = async (
       from users 
       inner join reviews on (users.id = reviews."userId")
       inner join books on (books.id = reviews."bookId")
-      where books.id = :bookId AND reviews.review IS NOT NULL AND reviews.review != ''
+      where books.id = :bookId
       `,
       {
         replacements: { bookId }, // Pass genre IDs as parameters

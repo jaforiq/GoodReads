@@ -172,7 +172,7 @@ export const getBookDetails: RequestHandler = async (
       (genre) => genre.name
     );
     const bookDetails = { ...book.toJSON(), genreName: genreNames };
-    console.log("BackEnd: ", bookDetails);
+    //console.log("BackEnd: ", bookDetails);
 
     res.status(200).json(bookDetails);
     return;

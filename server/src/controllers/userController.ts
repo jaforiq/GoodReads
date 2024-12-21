@@ -45,8 +45,8 @@ export const login: RequestHandler = async (
       expiresIn: "1d",
     });
     // res.cookie('token', token);
-
-    res.status(200).json({ message: "Login successful", token });
+    const userId = user.id;
+    res.status(200).json({ message: "Login successful", token, userId });
     return;
   } catch (error) {
     res.status(500).json({ message: "Error logging in", error });

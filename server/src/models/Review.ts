@@ -33,7 +33,7 @@ class Review
           allowNull: true,
         },
         review: {
-          type: DataTypes.TEXT,
+          type: DataTypes.STRING,
           allowNull: true,
         },
         userId: {

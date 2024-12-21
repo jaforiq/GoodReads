@@ -1,113 +1,3 @@
-// import { Search } from "lucide-react";
-// import { useEffect, useState } from "react"
-// import BookCard from "@/components/BookCard";
-// import { useDispatch, useSelector } from "react-redux";
-// import { searchBookByGenre, searchBookByTitle } from "@/services/searchServices";
-// import { addBooks, clearBooks } from "@/features/book/bookSlice";
-// import { FormControl, Input, InputGroup, InputLeftAddon, Select } from '@chakra-ui/react';
-// import { getAllBooks } from "@/services/bookServices";
-// import { GenreOption } from "@/type/Genre";
-// import { RootState } from "@/store/store";
-
-// const Home = () => {
-//   const dispatch = useDispatch();
-
-//   const [inputTitle, setInputTitle] = useState("");
-//   const [inputGenre, setInputGenre] = useState("");
-//   const [debouncedTitle, setDebouncedTitle] = useState("");
-//   const [debouncedGenre, setDebouncedGenre] = useState("");
-//   const genreState = useSelector((state: RootState) => state.genre);
-  
-//   const genreOptions : GenreOption[] = genreState.map((genre) => ({
-//     value: genre.id,
-//     label: genre.name 
-//   }));
-//   // const fetchGenre = async (genreIds: string[]) => {
-//   //   if (debouncedGenre) {
-//   //     const genreResponse = await searchBookByGenre(genreIds);
-//   //     if (genreResponse.length) {
-//   //       dispatch(addBooks(genreResponse));
-//   //     }
-//   //     return;
-//   //   }
-//   // }
-//   const handleGenreChange = (selectedOptions: readonly GenreOption[]) => {
-//     const selectedIds = selectedOptions.map((option) => option.value);
-//     fetchGenre(selectedIds);
-    
-//   };
-//   // Debounce logic
-//   useEffect(() => {
-//     const titleTimeout = setTimeout(() => setDebouncedTitle(inputTitle), 500);
-//     const genreTimeout = setTimeout(() => setDebouncedGenre(inputGenre), 500);
-
-//     return () => {
-//       clearTimeout(titleTimeout);
-//       clearTimeout(genreTimeout);
-//     };
-//   }, [inputTitle, inputGenre]);
-
-//   const fetchBooks = async () => {
-//     try {
-//       dispatch(clearBooks());
-
-//       if (debouncedGenre) {
-//         const genreResponse = await searchBookByGenre(debouncedGenre);
-//         if (genreResponse.length) {
-//           dispatch(addBooks(genreResponse));
-//         }
-//         return;
-//       }
-
-//       if (debouncedTitle) {
-//         const titleResponse = await searchBookByTitle(debouncedTitle);
-//         if (titleResponse.length) {
-//           dispatch(addBooks(titleResponse));
-//         }
-//         return;
-//       }
-
-//       // If neither title nor genre is provided, fetch all books
-//       const allBooks = await getAllBooks();
-//       dispatch(addBooks(allBooks));
-//     } catch (error) {
-//       console.error("Error fetching books:", error);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchBooks();
-//   }, [debouncedTitle, debouncedGenre]);
-
-//   return (
-//     <div>
-//       <InputGroup>
-//         <Input
-//           type="text"
-//           className='rounded-l-lg ml-16 mt-1'
-//           placeholder="Search by book title/descriptions"
-//           onChange={(e) => setInputTitle(e.target.value)}
-//         />
-//         <FormControl>
-//           <label htmlFor="picture" className="block text-sm font-medium text-gray-700">Genre</label>
-//             <Select
-//               isMulti
-//               name="genres"
-//               options={genreOptions}
-//               onChange={handleGenreChange}
-//               placeholder="Select Genres"
-//               aria-label="Select Genres"
-//               closeMenuOnSelect={false}
-//             />
-//           </FormControl>
-//         <InputLeftAddon className="mt-1" children={<Search className="mt-0 h-5 w-5" />}  />
-//       </InputGroup>
-//       <BookCard />
-//     </div>
-//   );
-// };
-
-// export default Home;
 
 import Select from "react-select";
 import { Search } from "lucide-react";
@@ -139,10 +29,6 @@ const Home = () => {
     const ids = selectedOptions.map((option) => option.value);
     setSelectedGenreIds(ids);
   };
-  // const handleGenreChange = (selectedOptions: readonly GenreOption[] | null) => {
-  //   const selectedIds = selectedOptions ? selectedOptions.map((option) => option.value) : [];
-  //   setSelectedGenreIds(selectedIds);
-  // };
 
   // Debounce logic
   useEffect(() => {
@@ -185,7 +71,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchBooks();
-  }, [debouncedTitle, debouncedGenreIds]);
+  }, [debouncedTitle, debouncedGenreIds]);  // for two useEffect fetchBooks calls 2 times
   
   return (
     <div className="relative mt-1">
