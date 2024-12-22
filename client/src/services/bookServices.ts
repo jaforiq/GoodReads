@@ -4,13 +4,26 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 //const token = useSelector((state: RootState) => state.user.token);
 
-export const getAllBooks = async () => {
+// export const getAllBooks = async (page: number, pageSize: number) => {
+//   try {
+//     const response = await apiClient.get("/books/");
+//     //console.log("ser: ", response.data.books);
+//     return response.data.books;
+//   } catch (err: any) {
+//     console.log("Error occure from book service.", err);
+//   }
+// };
+
+export const getAllBooks = async (page: number, pageSize: number) => {
   try {
-    const response = await apiClient.get("/books/");
-    //console.log("ser: ", response.data.books);
-    return response.data.books;
+    const response = await apiClient.get(`/books/`, {
+      params: { page, pageSize },
+    });
+    //console.log("Service: ", response.data);
+    return response.data;
   } catch (err: any) {
-    console.log("Error occure from book service.", err);
+    console.log("Error occurred from book service.", err);
+    return null;
   }
 };
 
@@ -42,6 +55,7 @@ export const findBookById = async (id: any) => {
 export const getBookDetails = async (id: any) => {
   try {
     const response = await apiClient.get(`/books/details/${id}`);
+
     return response.data;
   } catch (err: any) {
     console.log(

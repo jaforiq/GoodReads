@@ -37,7 +37,7 @@ const BookCard = () => {
         </Card>
       </div>
       ))) : (
-        <p>No books found</p>
+        <div></div>
         )}
       </div>
     </div>

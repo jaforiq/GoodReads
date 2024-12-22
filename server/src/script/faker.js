@@ -1,57 +1,63 @@
 const { faker } = require("@faker-js/faker");
-const { Event, EventGenre } = require("../models");
+const { Book, BookGenre } = require("../models"); // Adjust path as needed
 
-const seedBooks = async (numEvents, batchSize = 1000) => {
+const seedBooks = async (numBooks, batchSize = 1000) => {
   try {
-    const genres = [1, 2, 3, 4, 5, 6, 7];
-    const totalBatches = Math.ceil(numEvents / batchSize);
+    const genres = [1, 2, 3, 4, 5, 6]; // Assuming these are genre IDs in the `genres` table
+    const totalBatches = Math.ceil(numBooks / batchSize);
 
     for (let batch = 0; batch < totalBatches; batch++) {
-      const events = [];
-      const newEventData = [];
+      const books = [];
+      const newBookData = [];
+      //const bookGenres = [];
 
-      for (let i = 0; i < batchSize && batch * batchSize + i < numEvents; i++) {
-        const eventData = {
-          title: faker.lorem.words(),
+      for (let i = 0; i < batchSize && batch * batchSize + i < numBooks; i++) {
+        // Create book data
+        const bookData = {
+          title: faker.lorem.words({ min: 3, max: 6 }),
           details: faker.lorem.paragraph(),
           thumbnailUrl: faker.image.url(),
-          location: faker.location.city(),
-          startDate: faker.date.future(),
-          endDate: faker.date.future(),
-          userId: faker.number.int({ min: 1, max: 10 }), // assuming 10 users
+          AuthorName: `${faker.person.firstName()} ${faker.person.lastName()}`,
+          PublisherName: faker.company.name(),
+          userId: faker.number.int({ min: 1, max: 5 }), // Assuming 10 users in the `users` table
         };
 
-        newEventData.push(eventData);
+        newBookData.push(bookData);
       }
 
-      // Bulk insert events
-      const createdEvents = await Event.bulkCreate(newEventData, {
+      // Bulk insert books
+      const createdBooks = await Book.bulkCreate(newBookData, {
         returning: true,
       });
 
-      // Add genres to each event
-      for (const event of createdEvents) {
-        const numGenres = faker.number.int({ min: 1, max: 5 });
+      // Assign genres to each book
+      for (const book of createdBooks) {
+        const numGenres = faker.number.int({ min: 1, max: 5 }); // Assign 1-5 genres per book
         const randomGenres = faker.helpers.arrayElements(genres, numGenres);
-        console.log("randomgenre: ", randomGenres);
-        for (const genre of randomGenres) {
-          await EventGenre.create({
-            eventId: event.id,
-            genreId: genre,
+
+        for (const genreId of randomGenres) {
+          await BookGenre.create({
+            bookId: book.id,
+            genreId,
           });
         }
 
-        events.push(event);
+        books.push(book);
       }
 
-      console.log(`Batch ${batch + 1} processed successfully.`);
+      // Bulk insert book-genre associations
+      //await BookGenre.bulkCreate(bookGenres);
+
+      console.log(
+        `Batch ${batch + 1} of ${totalBatches} processed successfully.`
+      );
     }
 
-    console.log(`${numEvents} events seeded successfully.`);
+    console.log(`${numBooks} books seeded successfully.`);
   } catch (error) {
-    console.error("Error seeding events:", error);
+    console.error("Error seeding books:", error);
   }
 };
 
-// Usage: call the function with 10,000 events and a batch size of 1000
-seedEvents(10000, 1000);
+// Usage: Call the function with the desired number of books and a batch size
+seedBooks(10000, 1000);

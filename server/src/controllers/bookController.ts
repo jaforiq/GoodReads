@@ -103,14 +103,37 @@ export const deleteBook: RequestHandler = async (
   }
 };
 
+// export const getAllBooks: RequestHandler = async (
+//   req: Request,
+//   res: Response
+// ): Promise<void> => {
+//   console.log("AllBook");
+//   try {
+//     const books = await Book.findAll();
+//     res.status(200).json({ books });
+//     return;
+//   } catch (error) {
+//     res.status(500).json({ message: "Error retrieving all books", error });
+//     return;
+//   }
+// };
+
 export const getAllBooks: RequestHandler = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  console.log("AllBook");
   try {
-    const books = await Book.findAll();
-    res.status(200).json({ books });
+    const page = parseInt(req.query.page as string) || 1; // Default to page 1
+    const pageSize = parseInt(req.query.pageSize as string) || 24; // Default to 20 items per page
+
+    const offset = (page - 1) * pageSize;
+
+    const books = await Book.findAll({
+      limit: pageSize,
+      offset,
+    });
+    //console.log("BEBooks: ", books);
+    res.status(200).json(books);
     return;
   } catch (error) {
     res.status(500).json({ message: "Error retrieving all books", error });
