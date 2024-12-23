@@ -16,7 +16,7 @@ const Home = () => {
   const [page, setPage] = useState(1);
   const [inputTitle, setInputTitle] = useState("");
   const [debouncedTitle, setDebouncedTitle] = useState("");
-  const [isLoading, setLoading] = useState<boolean>(true);
+  const [isLoading, setLoading] = useState<boolean>(false);
   const [selectedGenreIds, setSelectedGenreIds] = useState<number[]>([]);
   const [debouncedGenreIds, setDebouncedGenreIds] = useState<number[]>([]);
   const genreState = useSelector((state: RootState) => state.genre);
@@ -45,13 +45,13 @@ const Home = () => {
 
     // Function to load more events when the user scrolls to the bottom
     const handleScroll = () => {
-      console.log('handleScroll start');
+      //console.log('handleScroll start');
       if (
         window.innerHeight + document.documentElement.scrollTop !==
         document.documentElement.offsetHeight
       )
         return;
-      console.log('handralScroll end');  
+      //console.log('handralScroll end');  
       setPage((prevPage) => prevPage + 1);
     };
   
@@ -76,24 +76,29 @@ const Home = () => {
     } catch (error) {
       console.error("Error fetching books:", error);
       setLoading(false);
-    }
+    } 
   };
   
   useEffect(() => {
     fetchBooks();
   }, [page, debouncedTitle, debouncedGenreIds]);  // for two useEffect fetchBooks calls 2 times
 
-  
+  console.log('Lo Home: ', isLoading);
+  // if(isLoading){
+  //   return(
+  //     <div className='absolute top-[48%] left-[48%]'><DefaultSpinner /></div>
+  //   )
+  // }
   return (
     <div className="relative mt-1">
       <div className="sticky z-50 ">
-      <InputGroup>
-        <Input
-          type="text"
-          className="rounded-l-lg ml-16 mt-1"
-          placeholder="Search by book title/descriptions"
-          onChange={(e) => setInputTitle(e.target.value)}
-        />
+        <InputGroup>
+          <Input
+            type="text"
+            className="rounded-l-lg ml-16 mt-1"
+            placeholder="Search by book title/descriptions"
+            onChange={(e) => setInputTitle(e.target.value)}
+          />
         <FormControl className="mt-1 my-1 mr-16 relative z-50">
           <Select
             isMulti
@@ -110,10 +115,9 @@ const Home = () => {
       </InputGroup>
       </div>
       {isLoading ? (<div className='absolute top-[48%] left-[48%]'><DefaultSpinner /></div>)
-      : (<div></div>)}
-      <div className="relative z-0">
-      <BookCard />
-      </div>
+      : (<div className="relative z-0">
+        <BookCard isLoading={isLoading}/>
+        </div>)  }      
     </div>
   );
 };

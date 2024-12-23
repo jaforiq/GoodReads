@@ -80,6 +80,7 @@ const CreateBook = () => {
         showToast("Book Create", "Book Created Successfull", 'success');
       }   
     } catch(err: any){
+      showToast("Book Create", "You are not authenticated user", 'error');
       console.log('Error Book creation.', err);
     }
   };

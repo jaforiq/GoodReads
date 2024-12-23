@@ -3,19 +3,32 @@ import { RootState } from '@/store/store';
 import { useNavigate } from 'react-router-dom';
 import emptyImage from '../assets/empty-folder.png';
 import {  ButtonGroup, Card, CardBody, CardFooter, Heading, Image, Stack, Text } from "@chakra-ui/react";
+import { useState } from 'react';
+import DefaultSpinner from './DefaultSpinner';
 
 
+interface Props {
+  isLoading: boolean;
+}
 
-const BookCard = () => {
+const BookCard = ({ isLoading }: Props) => {
   const navigate = useNavigate();
+  //const [isLoading, setLoading] = useState<boolean>(true);
   const bookState = useSelector((state: RootState) => state.book);
   const handleCardClick = (bookId: number| undefined) => navigate(`/details/${bookId}`);
-
-
+  
+  console.log('Lo Card: ', isLoading, bookState);
+  if (!isLoading && bookState.length === 0) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center text-red-600">
+        No book found
+      </div>
+    );
+  }
   return (
     <div className="w-full mt-5 px-16">
       <div className="flex flex-wrap gap-8" style={{ margin: '0 -1rem' }}>
-      {bookState.length > 0 ? (bookState.map((res) => (
+      {bookState.length > 0 && bookState.map((res) => (
       <div key={res.id} className="w-[390px] p-4">
         <Card className='cursor-pointer h-full' maxW='sm' key={res.id}  onClick={() => handleCardClick(res.id)}>
           <CardBody>
@@ -36,9 +49,7 @@ const BookCard = () => {
             </CardFooter>
         </Card>
       </div>
-      ))) : (
-        <div></div>
-        )}
+      ))} 
       </div>
     </div>
   );

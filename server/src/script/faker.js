@@ -61,4 +61,4 @@ const seedBooks = async (numBooks, batchSize = 1000) => {
   }
 };
 
-seedBooks(10, 2);
+seedBooks(300000, 1000);
