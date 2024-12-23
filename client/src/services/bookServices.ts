@@ -1,31 +1,5 @@
 import { Book } from "@/type/Book";
 import apiClient from "./api-client";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-//const token = useSelector((state: RootState) => state.user.token);
-
-// export const getAllBooks = async (page: number, pageSize: number) => {
-//   try {
-//     const response = await apiClient.get("/books/");
-//     //console.log("ser: ", response.data.books);
-//     return response.data.books;
-//   } catch (err: any) {
-//     console.log("Error occure from book service.", err);
-//   }
-// };
-
-// export const getAllBooks = async (page: number, pageSize: number) => {
-//   try {
-//     const response = await apiClient.get(`/books/`, {
-//       params: { page, pageSize },
-//     });
-//     //console.log("Service: ", response.data);
-//     return response.data;
-//   } catch (err: any) {
-//     console.log("Error occurred from book service.", err);
-//     return null;
-//   }
-// };
 
 export const getAllBooks = async (
   page: number,

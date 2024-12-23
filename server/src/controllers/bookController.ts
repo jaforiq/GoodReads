@@ -101,27 +101,27 @@ export const deleteBook: RequestHandler = async (
   }
 };
 
-// export const getBookById: RequestHandler = async (
-//   req: Request,
-//   res: Response
-// ): Promise<void> => {
-//   const { id } = req.params;
-//   console.log("getById");
-//   try {
-//     const book = await Book.findOne({ where: { id } });
+export const getBookById: RequestHandler = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { id } = req.params;
+  console.log("getById");
+  try {
+    const book = await Book.findOne({ where: { id } });
 
-//     if (!book) {
-//       res.status(404).json({ message: "Book not found or unauthorized" });
-//       return;
-//     }
+    if (!book) {
+      res.status(404).json({ message: "Book not found or unauthorized" });
+      return;
+    }
 
-//     res.status(200).json({ book });
-//     return;
-//   } catch (error) {
-//     res.status(500).json({ message: "Error retrieving getbookById", error });
-//     return;
-//   }
-// };
+    res.status(200).json({ book });
+    return;
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving getbookById", error });
+    return;
+  }
+};
 
 export const getBookDetails: RequestHandler = async (
   //********************************************************** */

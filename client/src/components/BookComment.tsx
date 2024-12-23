@@ -151,9 +151,9 @@ export default function BookComment(props: any) {
                   >
                     Edit
                   </Button>
-                  {/* <Button onClick={() => handleDelete(comment.id)} variant="outline" className="text-red-500">
+                  <Button onClick={() => handleDelete(comment.id)} variant="outline" className="text-red-500">
                     Delete
-                  </Button> */}
+                  </Button>
                 </div>
                 )}
               </div>
