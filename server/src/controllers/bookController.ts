@@ -241,7 +241,7 @@ export const getAllBooks: RequestHandler = async (
       // Fallback to Sequelize query if no genreIds
       books = await Book.findAll(queryOptions);
     }
-    console.log("books.length: ", books);
+    //console.log("books.length: ", books);
     if (!books || books.length === 0) {
       res.status(200).json(books);
       return;

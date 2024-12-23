@@ -3,13 +3,13 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useNavigate } from 'react-router-dom'
 import { Button } from "@/components/ui/button"
-import { createUser } from '@/services/userServices'
 import { showToast } from '@/services/showToast'
+import { createUser } from '@/services/userServices'
 import { useState, FormEvent, ChangeEvent } from 'react'
 
 export default function Register() {
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
   })
@@ -31,11 +31,11 @@ export default function Register() {
     if(response){
       showToast("Sign Up", "Sign Up Successfull", 'success');
       setFormData({
-        name: "",
+        username: "",
         email: "",
         password: "",
       });
-      if(response.data) {
+      if(response) {
         navigate('/login')
       }
     } else showToast("Sign Up", "Sign Up Failed", 'error')
@@ -50,10 +50,10 @@ export default function Register() {
             <Label htmlFor="name">Username</Label>
             <Input
               id="name"
-              name="name"
+              name="username"
               type="text"
               placeholder="Enter your username"
-              value={formData.name}
+              value={formData.username}
               onChange={handleInputChange}
               required
             />

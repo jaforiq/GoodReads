@@ -83,12 +83,7 @@ const Home = () => {
     fetchBooks();
   }, [page, debouncedTitle, debouncedGenreIds]);  // for two useEffect fetchBooks calls 2 times
 
-  console.log('Lo Home: ', isLoading);
-  // if(isLoading){
-  //   return(
-  //     <div className='absolute top-[48%] left-[48%]'><DefaultSpinner /></div>
-  //   )
-  // }
+  
   return (
     <div className="relative mt-1">
       <div className="sticky z-50 ">

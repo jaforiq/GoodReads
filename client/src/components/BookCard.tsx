@@ -3,8 +3,6 @@ import { RootState } from '@/store/store';
 import { useNavigate } from 'react-router-dom';
 import emptyImage from '../assets/empty-folder.png';
 import {  ButtonGroup, Card, CardBody, CardFooter, Heading, Image, Stack, Text } from "@chakra-ui/react";
-import { useState } from 'react';
-import DefaultSpinner from './DefaultSpinner';
 
 
 interface Props {
@@ -13,11 +11,10 @@ interface Props {
 
 const BookCard = ({ isLoading }: Props) => {
   const navigate = useNavigate();
-  //const [isLoading, setLoading] = useState<boolean>(true);
   const bookState = useSelector((state: RootState) => state.book);
   const handleCardClick = (bookId: number| undefined) => navigate(`/details/${bookId}`);
   
-  console.log('Lo Card: ', isLoading, bookState);
+
   if (!isLoading && bookState.length === 0) {
     return (
       <div className="fixed inset-0 flex items-center justify-center text-red-600">
