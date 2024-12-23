@@ -20,7 +20,7 @@ export default function BookComment(props: any) {
   const [editCommentId, setEditCommentId] = useState<number | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const userid = useSelector((state: RootState) => state.user.userId);
-  console.log('BComment: ', userid);
+  //console.log('BComment: ', userid);
   useEffect(() => {
     const transformedComments = review
     .filter((item: any) => item.review !== null)

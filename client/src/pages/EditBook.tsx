@@ -1,20 +1,15 @@
 import { Book } from "@/type/Book";
-import { RootState } from "@/store/store";
-import { Select } from "@chakra-ui/react";
-import { GenreOption } from "@/type/Genre";
+import { useDispatch} from "react-redux";
 import { useEffect, useState } from "react";
 import { showToast } from "@/services/showToast";
 import { addBooks } from "@/features/book/bookSlice";
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { FormControl } from "@chakra-ui/react/form-control";
 import { findBookById, updateBook } from "@/services/bookServices"
 
 const EditBook = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams<{ id: string }>();
-  const genreState = useSelector((state: RootState) => state.genre);
 
   
   const [book, setBook] = useState<Book>({
@@ -44,16 +39,6 @@ const EditBook = () => {
       const { name, value } = e.target;
       setBook(prev => ({ ...prev, [name]: value }));
     };
-  
-  const genreOptions : GenreOption[] = genreState.map((genre) => ({
-    value: genre.id,
-    label: genre.name 
-  }));
-
-  const handleGenreChange = (selectedOptions: readonly GenreOption[]) => {
-    const selectedIds = selectedOptions.map((option) => option.value);
-    setBook({ ...book, genreId: selectedIds });
-  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log("Inside FileChange");

@@ -14,12 +14,32 @@ import { RootState } from "@/store/store";
 //   }
 // };
 
-export const getAllBooks = async (page: number, pageSize: number) => {
+// export const getAllBooks = async (page: number, pageSize: number) => {
+//   try {
+//     const response = await apiClient.get(`/books/`, {
+//       params: { page, pageSize },
+//     });
+//     //console.log("Service: ", response.data);
+//     return response.data;
+//   } catch (err: any) {
+//     console.log("Error occurred from book service.", err);
+//     return null;
+//   }
+// };
+
+export const getAllBooks = async (
+  page: number,
+  pageSize: number,
+  title?: string,
+  genreIds?: number[]
+) => {
   try {
-    const response = await apiClient.get(`/books/`, {
-      params: { page, pageSize },
-    });
-    //console.log("Service: ", response.data);
+    const params: any = { page, pageSize };
+    if (title) params.input = title;
+    if (genreIds && genreIds.length > 0) params.genreIds = genreIds.join(",");
+
+    const response = await apiClient.get(`/books/`, { params });
+    console.log("getAllBooks: ", response.data);
     return response.data;
   } catch (err: any) {
     console.log("Error occurred from book service.", err);

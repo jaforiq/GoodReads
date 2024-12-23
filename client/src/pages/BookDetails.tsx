@@ -1,7 +1,7 @@
 
 import { format } from "date-fns";
 import { Star } from 'lucide-react'
-import { Book, BookBD } from '@/type/Book';
+import { BookBD } from '@/type/Book';
 import { CommentDB } from "@/type/Comment";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -9,20 +9,17 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from "@/components/ui/button"
 import BookComment from '@/components/BookComment';
-import { findBookById, getBookDetails } from '@/services/bookServices';
+import { getBookDetails } from '@/services/bookServices';
 import { createUserRating, getAllReview } from '@/services/reviewServices';
 
 const BookDetails = () => {
   const { id } = useParams<{ id: string }>();
   const token = localStorage.getItem('token');
-  //const [genre, setgenre] = useState<string[]>([]);
   const [book, setBook] = useState<BookBD | null>(null);
   const [review, setReview] = useState<CommentDB[]>([]);
-  //const genreState = useSelector((state: RootState) => state.genre);
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
   const [averageRating, setAverageRating] = useState<number | null>(null);
   const userid = useSelector((state: RootState) => state.user.userId);
-console.log('userid in BDetails: ', userid);
 
   const fetchBook = async () => {
     const response = await getBookDetails(id);
@@ -32,13 +29,6 @@ console.log('userid in BDetails: ', userid);
     //const response = await findBookById(id);
   }
 
-  // const fetchRatingOfBook = async () => {
-  //   if(token){
-  //     const response = await getUserReview(id, token);
-  //     console.log('fRatingBook: ', response);
-  //     setSelectedRating(response);
-  //   }
-  // }
   
   const calAvg = () => {
     if (review.length > 0) {
@@ -65,7 +55,6 @@ console.log('userid in BDetails: ', userid);
   }, [])
 
   useEffect(() => {
-    //console.log('Rev: ', review);
     calAvg();
   }, [review])
 

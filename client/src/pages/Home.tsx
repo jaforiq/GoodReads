@@ -6,10 +6,9 @@ import { useEffect, useState } from "react";
 import BookCard from "@/components/BookCard";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllBooks } from "@/services/bookServices";
-import { addBooks, clearBooks, setbooks } from "@/features/book/bookSlice";
-import { FormControl, Input, InputGroup, InputLeftAddon } from "@chakra-ui/react";
-import { searchBookByGenre, searchBookByTitle } from "@/services/searchServices";
 import DefaultSpinner from "@/components/DefaultSpinner";
+import { FormControl, Input, InputGroup } from "@chakra-ui/react";
+import { addBooks, clearBooks, setbooks } from "@/features/book/bookSlice";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -61,37 +60,6 @@ const Home = () => {
       return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-  // const fetchBooks = async () => {
-  //   try {
-  //     dispatch(clearBooks());
-
-  //     setLoading(true)
-  //     if (debouncedGenreIds.length > 0) {
-  //       const genreResponse = await searchBookByGenre(debouncedGenreIds);
-  //       if (genreResponse && genreResponse.length) {
-  //         dispatch(addBooks(genreResponse));
-  //         setLoading(false)
-  //       }
-  //       return;
-  //     }
-
-  //     if (debouncedTitle) {
-  //       const titleResponse = await searchBookByTitle(debouncedTitle);
-  //       if (titleResponse && titleResponse.length) {
-  //         dispatch(addBooks(titleResponse));
-  //         setLoading(false);
-  //       }
-  //       return;
-  //     }
-
-  //     // If neither title nor genre is provided, fetch all books
-  //     const allBooks = await getAllBooks(page, pageSize);
-  //     dispatch(addBooks(allBooks));
-  //     setLoading(false);
-  //   } catch (error) {
-  //     console.error("Error fetching books:", error);
-  //   }
-  // };
 
   const fetchBooks = async () => {
     try {
@@ -101,29 +69,8 @@ const Home = () => {
         dispatch(clearBooks()); // Clear only for the first page
       }
   
-      if (debouncedGenreIds.length > 0) {
-        dispatch(clearBooks());
-        const genreResponse = await searchBookByGenre(debouncedGenreIds);
-        if (genreResponse && genreResponse.length) {
-          dispatch(addBooks(genreResponse));
-        }
-        setLoading(false);
-        return;
-      }
-  
-      if (debouncedTitle) {
-        dispatch(clearBooks());
-        const titleResponse = await searchBookByTitle(debouncedTitle);
-        if (titleResponse && titleResponse.length) {
-          dispatch(addBooks(titleResponse));
-        }
-        setLoading(false);
-        return;
-      }
-  
-      // If neither title nor genre is provided, fetch all books
-      //dispatch(clearBooks());
-      const allBooks = await getAllBooks(page, pageSize);
+      if(debouncedTitle.length > 0 || debouncedGenreIds.length > 0) setPage(1);
+      const allBooks = await getAllBooks(page, pageSize, debouncedTitle, debouncedGenreIds);
       dispatch(page === 1 ? setbooks(allBooks) : addBooks(allBooks));
       setLoading(false);
     } catch (error) {

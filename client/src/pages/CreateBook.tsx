@@ -40,8 +40,6 @@ const CreateBook = () => {
 
   const handleGenreChange = (selectedOptions: readonly GenreOption[]) => {
     const selectedIds = selectedOptions.map((option) => option.value);
-    //console.log('cre: ',selectedIds);
-    //setBook(book => ({...book, genreId: selectedIds }))
     setBook({ ...book, genreId: selectedIds });
   };
 

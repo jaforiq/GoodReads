@@ -4,10 +4,7 @@ import {
   createBook,
   deleteBook,
   getAllBooks,
-  getBookById,
   updateBook,
-  searchBookByGenre,
-  searchBookByTitle,
   userBooks,
   getBookDetails,
 } from "../controllers/bookController";
@@ -16,8 +13,8 @@ const router = Router();
 
 // Public route
 router.get("/", getAllBooks);
-router.get("/searchtitle", searchBookByTitle);
-router.get("/searchgenre", searchBookByGenre);
+//router.get("/searchtitle", searchBookByTitle);
+//router.get("/searchgenre", searchBookByGenre);
 router.get("/details/:id", getBookDetails);
 
 // Protected routes for authenticated users
@@ -27,6 +24,6 @@ router.put("/:id", authenticateToken, updateBook);
 router.delete("/:id", authenticateToken, deleteBook);
 
 //Annoying route
-router.get("/:id", getBookById);
+//router.get("/:id", getBookById);
 
 export default router;
