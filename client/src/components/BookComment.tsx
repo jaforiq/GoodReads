@@ -17,10 +17,11 @@ export default function BookComment(props: any) {
   const token = localStorage.getItem('token');
   const [newComment, setNewComment] = useState('');
   const [editingComment, setEditingComment] = useState('');
-  const [editCommentId, setEditCommentId] = useState<number | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
+  const [editCommentId, setEditCommentId] = useState<number | null>(null);
   const userid = useSelector((state: RootState) => state.user.userId);
   //console.log('BComment: ', userid);
+  
   useEffect(() => {
     const transformedComments = review
     .filter((item: any) => item.review !== null)
@@ -151,9 +152,9 @@ export default function BookComment(props: any) {
                   >
                     Edit
                   </Button>
-                  <Button onClick={() => handleDelete(comment.id)} variant="outline" className="text-red-500">
+                  {/* <Button onClick={() => handleDelete(comment.id)} variant="outline" className="text-red-500">
                     Delete
-                  </Button>
+                  </Button> */}
                 </div>
                 )}
               </div>

@@ -24,7 +24,7 @@ app.use("/images", express.static(imagesPath));
 
 app.use(express.json());
 app.use("/api/genres", genreRoutes);
-app.use("/api/reviews", reviewRoutes);
+app.use("/api/book", reviewRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/books", bookRoutes);
 app.use("/api/wishlist", wishlistRoutes);

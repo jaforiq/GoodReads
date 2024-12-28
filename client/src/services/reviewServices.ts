@@ -15,9 +15,7 @@ export const getUserReview = async (id: any, token: string) => {
 
 export const getAllReview = async (id: any) => {
   try {
-    //console.log("rating: ", id, "tok: ", token);
-    const response = await apiClient.get(`/reviews/${id}`);
-    //console.log("resp: ", response.data);
+    const response = await apiClient.get(`/book/${id}/reviews/`);
     return response.data;
   } catch (error: any) {
     throw new Error(error.response.data);
@@ -32,7 +30,7 @@ export const createUserRating = async (
   try {
     //console.log("createUserRating: ", rating, token);
     const response = await apiClient.post(
-      `/reviews/${id}`,
+      `/book/${id}/reviews/`,
       { rating },
       {
         headers: { authorization: `Bearer ${token}` },
@@ -52,7 +50,7 @@ export const createUserReview = async (
 ) => {
   try {
     const response = await apiClient.post(
-      `/reviews/${id}`,
+      `/book/${id}/reviews/`,
       { review },
       {
         headers: { authorization: `Bearer ${token}` },

@@ -10,12 +10,12 @@ import {
 const router = Router();
 
 // Public route
-router.get("/:id", getAllReviewOfBook);
+router.get("/:id/reviews", getAllReviewOfBook);
 
 // Protected routes for authenticated users
 router.get("/userreview/:id", authenticateToken, getReviewOfBook);
-router.delete("/:id", authenticateToken, deleteReview);
-router.post("/:id", authenticateToken, createUpdateReview);
+router.delete("/", authenticateToken, deleteReview);
+router.post("/", authenticateToken, createUpdateReview);
 //router.put("/:id", authenticateToken, updateReview);
 
 export default router;

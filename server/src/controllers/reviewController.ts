@@ -114,11 +114,8 @@ export const getAllReviewOfBook: RequestHandler = async (
   try {
     const { id } = req.params;
     const bookId = parseInt(id, 10);
+    console.log("rev controller: ", id);
 
-    // const allReviews = await Review.findAll({
-    //   where: { bookId },
-    //   raw: true,
-    // });
     const bookReview = await sequelize.query(
       `
       select users.username, reviews.* 

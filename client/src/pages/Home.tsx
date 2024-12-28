@@ -60,7 +60,6 @@ const Home = () => {
       return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-
   const fetchBooks = async () => {
     try {
       setLoading(true);
@@ -80,7 +79,12 @@ const Home = () => {
   };
   
   useEffect(() => {
-    fetchBooks();
+
+    if(debouncedTitle || debouncedGenreIds){
+      console.log('title', debouncedTitle)
+      console.log('genre: ', debouncedGenreIds);
+      fetchBooks();
+    }
   }, [page, debouncedTitle, debouncedGenreIds]);  // for two useEffect fetchBooks calls 2 times
 
   
