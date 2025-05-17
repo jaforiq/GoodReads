@@ -1,17 +1,17 @@
 import apiClient from "./api-client";
 
-export const getUserReview = async (id: any, token: string) => {
-  try {
-    //console.log("rating: ", id, "tok: ", token);
-    const response = await apiClient.get(`/reviews/userreview/${id}`, {
-      headers: { authorization: `Bearer ${token}` },
-    });
-    //console.log("resp: ", response.data.userReview.rating);
-    return response.data.userReview.rating;
-  } catch (error: any) {
-    throw new Error(error.response);
-  }
-};
+// export const getUserReview = async (id: any, token: string) => {
+//   try {
+//     //console.log("rating: ", id, "tok: ", token);
+//     const response = await apiClient.get(`/reviews/userreview/${id}`, {
+//       headers: { authorization: `Bearer ${token}` },
+//     });
+//     //console.log("resp: ", response.data.userReview.rating);
+//     return response.data.userReview.rating;
+//   } catch (error: any) {
+//     throw new Error(error.response);
+//   }
+// };
 
 export const getAllReview = async (id: any) => {
   try {

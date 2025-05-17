@@ -199,7 +199,7 @@ export const getAllBooks: RequestHandler = async (
       .filter((id) => !isNaN(id));
     const page = parseInt(req.query.page as string) || 1;
     const pageSize = parseInt(req.query.pageSize as string) || 24;
-
+    console.log("params: ", page, pageSize);
     const offset = (page - 1) * pageSize;
 
     // Base query options
@@ -252,3 +252,72 @@ export const getAllBooks: RequestHandler = async (
     res.status(500).json({ message: "Error retrieving books.", error });
   }
 };
+
+// export const getAllBooks: RequestHandler = async (req, res) => {
+//   try {
+//     const input = req.query.input as string | undefined;
+//     const genreIds = (req.query.genreIds as string | undefined)
+//       ?.split(",")
+//       .map((id) => parseInt(id.trim(), 10))
+//       .filter((id) => !isNaN(id));
+//     const page = parseInt(req.query.page as string) || 1;
+//     const pageSize = parseInt(req.query.pageSize as string) || 24;
+//     const offset = (page - 1) * pageSize;
+//     console.log("params: ", page, pageSize);
+//     let books;
+
+//     if (input && genreIds && genreIds.length > 0) {
+//       books = await sequelize.query(
+//         `
+//         WITH filtered_books AS (
+//           SELECT books.*
+//           FROM books
+//           WHERE search_vector @@ plainto_tsquery('english', :input)
+//           LIMIT :limit OFFSET :offset
+//         )
+//         SELECT fb.*
+//         FROM filtered_books fb
+//         INNER JOIN book_genres bg ON fb.id = bg."bookId"
+//         WHERE bg."genreId" IN (:genreIds);
+//         `,
+//         {
+//           replacements: { input, genreIds, limit: pageSize, offset },
+//           type: QueryTypes.SELECT,
+//         }
+//       );
+//     } else if (input) {
+//       books = await sequelize.query(
+//         `
+//         SELECT *
+//         FROM books
+//         WHERE search_vector @@ plainto_tsquery('english', :input)
+//         LIMIT :limit OFFSET :offset;
+//         `,
+//         {
+//           replacements: { input, limit: pageSize, offset },
+//           type: QueryTypes.SELECT,
+//         }
+//       );
+//     } else if (genreIds && genreIds.length > 0) {
+//       books = await sequelize.query(
+//         `
+//         SELECT books.*
+//         FROM books
+//         INNER JOIN book_genres ON books.id = book_genres."bookId"
+//         WHERE book_genres."genreId" IN (:genreIds)
+//         LIMIT :limit OFFSET :offset;
+//         `,
+//         {
+//           replacements: { genreIds, limit: pageSize, offset },
+//           type: QueryTypes.SELECT,
+//         }
+//       );
+//     } else {
+//       books = await Book.findAll({ limit: pageSize, offset });
+//     }
+
+//     res.status(200).json(books);
+//   } catch (error) {
+//     res.status(500).json({ message: "Error retrieving books.", error });
+//   }
+// };

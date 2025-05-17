@@ -15,7 +15,7 @@ router.get("/:id/reviews", getAllReviewOfBook);
 // Protected routes for authenticated users
 router.get("/userreview/:id", authenticateToken, getReviewOfBook);
 router.delete("/", authenticateToken, deleteReview);
-router.post("/", authenticateToken, createUpdateReview);
+router.post("/:id/reviews", authenticateToken, createUpdateReview);
 //router.put("/:id", authenticateToken, updateReview);
 
 export default router;
